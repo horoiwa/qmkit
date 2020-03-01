@@ -20,6 +20,7 @@ class GeometoryOptimizer(BaseInterface):
         mol = self.mol
         tmpfile = self.tmpfile + "_confs.sdf"
 
+        self.logger.info("Start conformer generation")
         mol, mmenergy_confIds = generate_conformers(mol, self.confgen,
                                                     self.rms, self.n_jobs)
 

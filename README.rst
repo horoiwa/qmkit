@@ -23,8 +23,9 @@ Python setup
 ------------
 
 .. code-block :: bash
-
-    conda install psi4 psi4-rt python=3.6 -c psi4
+    conda create -n qm python=3.7
+    conda activate qm
+    conda install psi4 psi4-rt python=3.7 -c psi4
     conda install -c conda-forge rdkit
 
 

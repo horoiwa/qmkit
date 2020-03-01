@@ -1,3 +1,4 @@
+from tqdm import tqdm
 from rdkit import Chem
 from rdkit.Chem import AllChem
 
@@ -12,7 +13,7 @@ def generate_conformers(mol, confgen=1000, rms=2.0, n_jobs=1):
 
     energy = []
     prop = AllChem.MMFFGetMoleculeProperties(mol)
-    for cid in conf_ids:
+    for cid in tqdm(conf_ids):
         mmff = AllChem.MMFFGetMoleculeForceField(mol, prop, confId=cid)
         mmff.Minimize()
         energy.append((mmff.CalcEnergy(), cid))
