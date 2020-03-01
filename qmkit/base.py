@@ -28,7 +28,8 @@ class BaseInterface:
 
         self.tmpfile = str(self.savedir / f"{uuid.uuid4()}")
 
-        self.config = asdict(CONFIG_LIST[config]())
+        if config:
+            self.config = asdict(CONFIG_LIST[config]())
 
         self.log = {"in": self.mol, "out": None}
 
