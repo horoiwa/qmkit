@@ -18,7 +18,7 @@ class GeometoryOptimizer(BaseInterface):
 
     def run(self):
         mol = self.mol
-        tmpfile = self.tmpfile + ".sdf"
+        tmpfile = self.tmpfile + "_confs.sdf"
 
         mol, confIds = generate_conformers(mol, self.n_gen,
                                            self.rms, self.n_jobs)
@@ -26,5 +26,6 @@ class GeometoryOptimizer(BaseInterface):
         self.logger.info(f"{len(confIds)} conformers generated")
         util.to_sdf_by_confIds(mol, confIds, tmpfile)
         mols = util.from_multisdf(tmpfile)
-        print(len(mols))
+
+        self.logger.info(f"{len(mols)} conformers MM-optimized")
 
