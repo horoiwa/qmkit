@@ -8,7 +8,7 @@ class GeometoryOptimizer(BaseInterface):
     def __init__(self, mol, save_dir=None, n_jobs=1):
         super().__init__(mol, save_dir, n_jobs)
 
-        self.n_gen = 1000
+        self.confgen = 1000
 
         self.rms = 1.0
 
@@ -20,12 +20,13 @@ class GeometoryOptimizer(BaseInterface):
         mol = self.mol
         tmpfile = self.tmpfile + "_confs.sdf"
 
-        mol, confIds = generate_conformers(mol, self.n_gen,
-                                           self.rms, self.n_jobs)
+        mol, mmenergy_confIds = generate_conformers(mol, self.confgen,
+                                                    self.rms, self.n_jobs)
 
-        self.logger.info(f"{len(confIds)} conformers generated")
+        self.logger.info(f"{len(mmenergy_confIds)} conformers generated")
+
+        confIds = [mmenergy_confIds[i][1] for i in range(self.n_qm)]
         util.to_sdf_by_confIds(mol, confIds, tmpfile)
         mols = util.from_multisdf(tmpfile)
 
-        self.logger.info(f"{len(mols)} conformers MM-optimized")
-
+        self.logger.info(f"QM-optimization: {len(mols)} conformers ")
