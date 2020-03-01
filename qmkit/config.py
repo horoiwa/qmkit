@@ -6,6 +6,7 @@ CONFIG_LIST = {}
 
 def register_config(cls):
     CONFIG_LIST[cls.__name__] = cls
+    return cls
 
 
 @register_config
