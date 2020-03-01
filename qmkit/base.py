@@ -1,16 +1,18 @@
 import uuid
 from pathlib import Path
+from dataclasses import asdict
 from pprint import pprint
 
 import rdkit
 from rdkit import Chem
 
 from qmkit.util import get_logger
+from qmkit.config import CONFIG_LIST
 
 
 class BaseInterface:
 
-    def __init__(self, mol, save_dir=None, n_jobs=1):
+    def __init__(self, mol, save_dir=None, config=None):
 
         if not isinstance(mol, rdkit.Chem.rdchem.Mol):
             raise TypeError(f"mol must be rdchem.Mol object, given {type(mol)}")
@@ -24,13 +26,13 @@ class BaseInterface:
         else:
             self.savedir = Path(save_dir).resolve()
 
+        self.tmpfile = str(self.savedir / f"{uuid.uuid4()}")
+
+        self.config = asdict(CONFIG_LIST[config]())
+
         self.log = {"in": self.mol, "out": None}
 
-        self.n_jobs = n_jobs
-
         self.logger = get_logger()
-
-        self.tmpfile = str(self.savedir / f"{uuid.uuid4()}")
 
         self._post_init()
 
@@ -49,6 +51,9 @@ class BaseInterface:
             tmpfiles = list(self.savedir.glob(f"{name}*"))
             for file in tmpfiles:
                 file.unlink()
+
+    def show_config(self):
+        pprint(self.config)
 
     def get_result(self):
         raise NotImplementedError()

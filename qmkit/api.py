@@ -6,27 +6,24 @@ from qmkit import util
 class GeometoryOptimizer(BaseInterface):
 
     def __init__(self, mol, save_dir=None, n_jobs=1):
-        super().__init__(mol, save_dir, n_jobs)
 
-        self.confgen = 1000
+        super().__init__(mol, save_dir=save_dir, config="OptConfig")
 
-        self.rms = 1.0
+        self.show_config()
 
-        self.forcefield = ""
-
-        self.n_qm = 5
-
-    def run(self):
+    def run(self, n_jobs=1):
         mol = self.mol
         tmpfile = self.tmpfile + "_confs.sdf"
 
         self.logger.info("Start conformer generation")
-        mol, mmenergy_confIds = generate_conformers(mol, self.confgen,
-                                                    self.rms, self.n_jobs)
+        mol, mmenergy_confIds = generate_conformers(mol,
+                                                    self.config["confgen"],
+                                                    self.config["rms"],
+                                                    n_jobs)
 
         self.logger.info(f"{len(mmenergy_confIds)} conformers generated")
 
-        confIds = [mmenergy_confIds[i][1] for i in range(self.n_qm)]
+        confIds = [mmenergy_confIds[i][1] for i in range(self.config["n_qm"])]
         util.to_sdf_by_confIds(mol, confIds, tmpfile)
         mols = util.from_multisdf(tmpfile)
 

@@ -1,5 +1,5 @@
 from tqdm import tqdm
-from rdkit import Chem
+import psi4
 from rdkit.Chem import AllChem
 
 
